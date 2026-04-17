@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Max McCullagh</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="CrescentImage.jpg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap"></noscript>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -256,7 +259,8 @@
 
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 16.67vw;
     gap: 2px;
   }
 
@@ -265,8 +269,6 @@
     margin: 0 auto;
   }
 
-  /* No grid-row spans anywhere — every row closes flush.
-     Variety comes from column width + aspect-ratio combos only. */
   .gallery-item {
     position: relative;
     overflow: hidden;
@@ -274,42 +276,32 @@
   }
 
   .gallery-item img {
-    position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    aspect-ratio: 3/2;
+    object-fit: contain;
     display: block;
   }
 
-  /* Row 1: 7 + 5 */
-  .gallery-item:nth-child(1)  { grid-column: span 7; aspect-ratio: 7/4; }
-  .gallery-item:nth-child(2)  { grid-column: span 5; aspect-ratio: 5/4; }
-  /* Row 2: 4 + 4 + 4 */
-  .gallery-item:nth-child(3)  { grid-column: span 4; aspect-ratio: 4/3; }
-  .gallery-item:nth-child(4)  { grid-column: span 4; aspect-ratio: 4/3; }
-  .gallery-item:nth-child(5)  { grid-column: span 4; aspect-ratio: 4/3; }
-  /* Row 3: 5 + 7 */
-  .gallery-item:nth-child(6)  { grid-column: span 5; aspect-ratio: 5/3; }
-  .gallery-item:nth-child(7)  { grid-column: span 7; aspect-ratio: 7/3; }
-  /* Row 4: 3 + 6 + 3 */
-  .gallery-item:nth-child(8)  { grid-column: span 3; aspect-ratio: 3/4; }
-  .gallery-item:nth-child(9)  { grid-column: span 6; aspect-ratio: 6/4; }
-  .gallery-item:nth-child(10) { grid-column: span 3; aspect-ratio: 3/4; }
-  /* Row 5: 6 + 6 */
-  .gallery-item:nth-child(11) { grid-column: span 6; aspect-ratio: 6/4; }
-  .gallery-item:nth-child(12) { grid-column: span 6; aspect-ratio: 6/4; }
-  /* Row 6: 4 + 4 + 4 */
-  .gallery-item:nth-child(13) { grid-column: span 4; aspect-ratio: 4/3; }
-  .gallery-item:nth-child(14) { grid-column: span 4; aspect-ratio: 4/3; }
-  .gallery-item:nth-child(15) { grid-column: span 4; aspect-ratio: 4/3; }
-  /* Row 7: 8 + 4 */
-  .gallery-item:nth-child(16) { grid-column: span 8; aspect-ratio: 8/4; }
-  .gallery-item:nth-child(17) { grid-column: span 4; aspect-ratio: 4/4; }
+  .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .gallery-item:nth-child(2) { grid-column: span 1; }
+  .gallery-item:nth-child(3) { grid-column: span 1; }
+  .gallery-item:nth-child(4) { grid-column: span 1; }
+  .gallery-item:nth-child(5) { grid-column: span 2; }
+  .gallery-item:nth-child(6) { grid-column: span 1; }
+  .gallery-item:nth-child(7) { grid-column: span 1; }
+  .gallery-item:nth-child(8) { grid-column: span 1; }
+  .gallery-item:nth-child(9) { grid-column: span 2; grid-row: span 2; }
+  .gallery-item:nth-child(10) { grid-column: span 1; }
+  .gallery-item:nth-child(11) { grid-column: span 1; }
+  .gallery-item:nth-child(12) { grid-column: span 1; }
+  .gallery-item:nth-child(13) { grid-column: span 1; grid-row: span 2; }
+  .gallery-item:nth-child(14) { grid-column: span 1; grid-row: span 2; }
+  .gallery-item:nth-child(15) { grid-column: span 1; }
+  .gallery-item:nth-child(16) { grid-column: span 2; grid-row: span 2; }
+  .gallery-item:nth-child(17) { grid-column: span 1; grid-row: span 2; }
 
   .gallery-item .placeholder {
-    position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -501,11 +493,12 @@
   .rig-card:hover {
     transform: translateY(-4px);
     border-color: rgba(163,184,232,0.4);
+    will-change: transform;
   }
 
   .rig-image {
     width: 100%;
-    height: 260px;
+    aspect-ratio: 4 / 3;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -753,7 +746,7 @@
 
   <div class="gallery-grid" id="galleryGrid">
     <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
-      <img loading="lazy" decoding="async" src="CrescentImage.jpg" data-fullsrc="CrescentImage.jpg" alt="Crescent Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <img loading="eager" fetchpriority="high" decoding="async" src="CrescentImage.jpg" data-fullsrc="CrescentImage.jpg" alt="Crescent Nebula" style="width: 100%; height: 100%; object-fit: cover;">
       <div class="overlay">
         <div class="overlay-title">Crescent Nebula</div>
         <div class="overlay-meta">Nebula · Ha/OIII · 19h integration</div>
@@ -801,11 +794,11 @@
         <div class="overlay-meta">Wide-field · RGB · 2h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
-      <img loading="lazy" decoding="async" src="NorthAmericaImage.jpg" data-fullsrc="NorthAmericaImage.jpg" alt="North America Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="LeoTrioImage.jpg" data-fullsrc="LeoTrioImage.jpg" alt="Leo Triplet" style="width: 100%; height: 100%; object-fit: cover;">
       <div class="overlay">
-        <div class="overlay-title">North America Nebula</div>
-        <div class="overlay-meta">Wide-field · RGB · 7h integration</div>
+        <div class="overlay-title">Leo Triplet</div>
+        <div class="overlay-meta">Galaxy · RGB · 12h integration</div>
       </div>
     </div>
     <div class="gallery-item" data-category="globular" onclick="openLightbox(this)">
@@ -836,11 +829,11 @@
         <div class="overlay-meta">Nebula · SHO · 18h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
-      <img loading="lazy" decoding="async" src="LeoTrioImage.jpg" data-fullsrc="LeoTrioImage.jpg" alt="Leo Triplet" style="width: 100%; height: 100%; object-fit: cover;">
+    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="NorthAmericaImage.jpg" data-fullsrc="NorthAmericaImage.jpg" alt="North America Nebula" style="width: 100%; height: 100%; object-fit: cover;">
       <div class="overlay">
-        <div class="overlay-title">Leo Triplet</div>
-        <div class="overlay-meta">Galaxy · RGB · 12h integration</div>
+        <div class="overlay-title">North America Nebula</div>
+        <div class="overlay-meta">Wide-field · RGB · 7h integration</div>
       </div>
     </div>
     <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
@@ -889,6 +882,7 @@
         Beyond the camera, I build custom 3D-printed hardware to improve my imaging setup. I care deeply about the quality of my equipment, and strive to optimize every aspect of my workflow.
       </p>
       <img src="aboutme.jpg" alt="About me photo" class="about-photo">
+      <div class="about-photo-caption">Portrait + imaging setup</div>
     </div>
     <div class="about-right">
       <div class="section-label" style="margin-bottom: 1.5rem;">Primary Kit</div>
@@ -1074,7 +1068,7 @@
     canvas.height = window.innerHeight;
   }
   resize();
-  window.addEventListener('resize', () => { resize(); drawStatic(); });
+  window.addEventListener('resize', () => { resize(); });
 
   // Seeded PRNG for deterministic star positions
   function mulberry32(a) {
@@ -1088,7 +1082,8 @@
   const rnd = mulberry32(0xDEADBEEF);
 
   // Generate stars of different size classes
-  const STAR_COUNT = 420;
+  const isMobile = window.innerWidth < 768;
+  const STAR_COUNT = isMobile ? 180 : 420;
   const stars = Array.from({ length: STAR_COUNT }, () => ({
     x: rnd(),
     y: rnd(),
@@ -1109,32 +1104,13 @@
   ];
 
   let tick = 0;
+  let lastFrame = 0;
+  const FRAME_MS = 1000 / 30;
 
-  function drawStatic() {
-    const W = canvas.width, H = canvas.height;
-    ctx.clearRect(0, 0, W, H);
-
-    // Draw nebula glows
-    nebulae.forEach(n => {
-      const grd = ctx.createRadialGradient(
-        n.x * W, n.y * H, 0,
-        n.x * W, n.y * H, Math.max(n.rx * W, n.ry * H)
-      );
-      const [r, g, b] = n.color;
-      grd.addColorStop(0,   `rgba(${r},${g},${b},${n.a})`);
-      grd.addColorStop(0.4, `rgba(${r},${g},${b},${n.a * 0.5})`);
-      grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
-      ctx.save();
-      ctx.scale(1, n.ry / n.rx);
-      ctx.beginPath();
-      ctx.arc(n.x * W, (n.y * H) * (n.rx / n.ry), n.rx * W, 0, Math.PI * 2);
-      ctx.fillStyle = grd;
-      ctx.fill();
-      ctx.restore();
-    });
-  }
-
-  function animate() {
+  function animate(now) {
+    requestAnimationFrame(animate);
+    if (now - lastFrame < FRAME_MS) return;
+    lastFrame = now;
     const W = canvas.width, H = canvas.height;
     ctx.clearRect(0, 0, W, H);
 
@@ -1183,10 +1159,9 @@
     });
 
     tick++;
-    requestAnimationFrame(animate);
   }
 
-  animate();
+  requestAnimationFrame(animate);
 })();
 
 // ── Page fade in ────────────────────────────────────────────────────────────
