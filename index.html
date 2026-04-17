@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max McCullagh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #05070d;
+    --bg2: #0b0e18;
+    --surface: #111520;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e6f0;
+    --muted: #7a7d94;
+    --accent: #a3b8e8;
+    --accent2: #6e9fd4;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Outfit', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    line-height: 1.7;
+    cursor: crosshair;
+  }
+
+  /* Starfield lives on a canvas injected by JS */
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    background: rgba(5,7,13,0.7);
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(110,159,212,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 70%, rgba(163,184,232,0.06) 0%, transparent 70%);
+  }
+
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 2rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .darkness-hover {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .darkness-hover:hover {
+    color: #64649b;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  }
+
+  .light-hover {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .light-hover:hover {
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 200, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.4);
+    filter: brightness(1.5);
+  }
+
+  .hero-sub {
+    max-width: 480px;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(163,184,232,0.3);
+    padding-bottom: 4px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .hero-cta:hover { color: var(--text); border-color: rgba(232,230,240,0.5); }
+  .hero-cta::after { content: '↓'; }
+
+  .hero-coords {
+    position: absolute;
+    top: 50%;
+    right: 3rem;
+    transform: translateY(-50%);
+    text-align: right;
+    color: rgba(122,125,148,0.4);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+
+  /* SECTION BASE */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 3rem;
+  }
+
+  .section-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 60px;
+    background: rgba(163,184,232,0.3);
+  }
+
+  /* GALLERY */
+  #gallery { background: var(--bg2); border-top: 1px solid var(--border); }
+
+  .gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4rem;
+  }
+
+  .gallery-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+
+  .gallery-filter {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .filter-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2px;
+  }
+
+  section#gallery {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* No grid-row spans anywhere — every row closes flush.
+     Variety comes from column width + aspect-ratio combos only. */
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .gallery-item img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Row 1: 7 + 5 */
+  .gallery-item:nth-child(1)  { grid-column: span 7; aspect-ratio: 7/4; }
+  .gallery-item:nth-child(2)  { grid-column: span 5; aspect-ratio: 5/4; }
+  /* Row 2: 4 + 4 + 4 */
+  .gallery-item:nth-child(3)  { grid-column: span 4; aspect-ratio: 4/3; }
+  .gallery-item:nth-child(4)  { grid-column: span 4; aspect-ratio: 4/3; }
+  .gallery-item:nth-child(5)  { grid-column: span 4; aspect-ratio: 4/3; }
+  /* Row 3: 5 + 7 */
+  .gallery-item:nth-child(6)  { grid-column: span 5; aspect-ratio: 5/3; }
+  .gallery-item:nth-child(7)  { grid-column: span 7; aspect-ratio: 7/3; }
+  /* Row 4: 3 + 6 + 3 */
+  .gallery-item:nth-child(8)  { grid-column: span 3; aspect-ratio: 3/4; }
+  .gallery-item:nth-child(9)  { grid-column: span 6; aspect-ratio: 6/4; }
+  .gallery-item:nth-child(10) { grid-column: span 3; aspect-ratio: 3/4; }
+  /* Row 5: 6 + 6 */
+  .gallery-item:nth-child(11) { grid-column: span 6; aspect-ratio: 6/4; }
+  .gallery-item:nth-child(12) { grid-column: span 6; aspect-ratio: 6/4; }
+  /* Row 6: 4 + 4 + 4 */
+  .gallery-item:nth-child(13) { grid-column: span 4; aspect-ratio: 4/3; }
+  .gallery-item:nth-child(14) { grid-column: span 4; aspect-ratio: 4/3; }
+  .gallery-item:nth-child(15) { grid-column: span 4; aspect-ratio: 4/3; }
+  /* Row 7: 8 + 4 */
+  .gallery-item:nth-child(16) { grid-column: span 8; aspect-ratio: 8/4; }
+  .gallery-item:nth-child(17) { grid-column: span 4; aspect-ratio: 4/4; }
+
+  .gallery-item .placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: transform 0.5s ease;
+  }
+
+  .gallery-item:nth-child(1) .placeholder { height: 100%; }
+
+  .gallery-item:hover .placeholder { transform: scale(1.03); }
+
+  .placeholder-icon {
+    font-size: 2rem;
+    opacity: 0.3;
+  }
+
+  .placeholder-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .gallery-item .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(5,7,13,0.9) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+  }
+
+  .gallery-item:hover .overlay { opacity: 1; }
+
+  .overlay-title {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 300;
+    margin-bottom: 0.25rem;
+  }
+
+  .overlay-meta {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  /* Placeholder color schemes */
+  .p1 { background: linear-gradient(135deg, #0d1225 0%, #1a2a4a 40%, #0a1535 100%); }
+  .p2 { background: linear-gradient(135deg, #120d25 0%, #2a1a40 40%, #150a30 100%); }
+  .p3 { background: linear-gradient(135deg, #0d2015 0%, #1a3a25 40%, #0a2510 100%); }
+  .p4 { background: linear-gradient(135deg, #251208 0%, #3a2010 40%, #200d05 100%); }
+  .p5 { background: linear-gradient(135deg, #0d1820 0%, #1a3040 40%, #0a1520 100%); }
+  .p6 { background: linear-gradient(135deg, #200d1a 0%, #3a1a30 40%, #150a20 100%); }
+  .p7 { background: linear-gradient(135deg, #0d2020 0%, #1a3535 40%, #082020 100%); }
+  .p8 { background: linear-gradient(135deg, #1a150d 0%, #302510 40%, #201508 100%); }
+
+  /* ABOUT */
+  #about { border-top: 1px solid var(--border); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .about-photo {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    margin-bottom: 1.25rem;
+  }
+
+  .about-photo-caption {
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .about-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+  }
+
+  .about-body {
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 3rem;
+  }
+
+  .stat-box {
+    background: var(--surface);
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+  }
+
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .gear-list {
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .gear-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .gear-item:last-child { border-bottom: none; }
+  .gear-item:hover { background: var(--surface); }
+
+  .gear-name { color: var(--text); font-family: var(--sans); font-size: 14px; font-weight: 400; }
+  .gear-role { color: var(--muted); font-family: var(--sans); font-size: 12px; font-weight: 300; }
+  .gear-tag {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    align-self: center;
+    white-space: nowrap;
+  }
+
+  #telescopes { background: var(--bg2); border-top: 1px solid var(--border); }
+
+  .telescopes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .rig-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  .rig-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(163,184,232,0.4);
+  }
+
+  .rig-image {
+    width: 100%;
+    height: 260px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .rig-content {
+    padding: 1.5rem;
+  }
+
+  .rig-name {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 300;
+    margin-bottom: 0.65rem;
+  }
+
+  .rig-desc {
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  /* PROCESS */
+  #process { background: var(--bg2); border-top: 1px solid var(--border); }
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .process-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    transition: border-color 0.2s;
+  }
+
+  .process-card:hover { border-color: rgba(163,184,232,0.3); }
+
+  .process-num {
+    font-family: var(--serif);
+    font-size: 3rem;
+    font-weight: 300;
+    color: rgba(163,184,232,0.15);
+    display: block;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+
+  .process-title {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .process-desc {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* CONTACT */
+  #contact { border-top: 1px solid var(--border); }
+
+  .contact-inner {
+    max-width: 640px;
+  }
+
+  .contact-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 300;
+    line-height: 1.05;
+    margin-bottom: 2rem;
+  }
+
+  .contact-sub {
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.9;
+    margin-bottom: 3rem;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    font-family: var(--sans);
+    transition: color 0.2s;
+    font-size: 15px;
+  }
+
+  .contact-link:first-child { border-top: 1px solid var(--border); }
+  .contact-link:hover { color: var(--accent); }
+
+  .contact-link-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .contact-link-arrow { color: var(--muted); transition: transform 0.2s, color 0.2s; }
+  .contact-link:hover .contact-link-arrow { transform: translateX(4px); color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(122,125,148,0.5);
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(5,7,13,0.95);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox-inner {
+    max-width: 80vw;
+    max-height: 80vh;
+    text-align: center;
+  }
+
+  .lightbox-caption {
+    color: rgba(232,230,240,0.8);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 0.75rem;
+    opacity: 0.9;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .lightbox-close:hover { color: var(--text); border-color: var(--text); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.25rem 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 0 1.5rem 4rem; }
+    .hero-coords { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item { grid-column: span 1 !important; grid-row: span 1 !important; }
+    .process-grid { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starfield" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+
+<nav>
+  <a href="#" class="nav-logo">Max McCullagh — Astrophotography</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Unveiling the beauty of the night sky</div>
+  <h1 class="hero-title">
+    Chasing<br><em><span class="darkness-hover">darkness</span></em><br>to find <span class="light-hover">light</span>
+  </h1>
+  <p class="hero-sub">
+    Long-exposure imaging of nebulae and galaxies, capturing photons over time . Every frame is a multi-hour investment in patience.
+  </p>
+  <a href="#gallery" class="hero-cta">View my work</a>
+
+  <div class="hero-coords">
+    47.6062° N<br>122.3321° W<br>—<br>Seattle, WA
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="gallery-header">
+    <div>
+      <div class="section-label">Portfolio</div>
+      <h2 class="gallery-title">Selected<br>Images</h2>
+      <div class="gallery-filter">
+        <button class="filter-btn active" onclick="filterGallery('all', this)">All</button>
+        <button class="filter-btn" onclick="filterGallery('nebula', this)">Nebulae</button>
+        <button class="filter-btn" onclick="filterGallery('galaxy', this)">Galaxies</button>
+        <button class="filter-btn" onclick="filterGallery('widefield', this)">Wide-field</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="CrescentImage.jpg" data-fullsrc="CrescentImage.jpg" alt="Crescent Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Crescent Nebula</div>
+        <div class="overlay-meta">Nebula · Ha/OIII · 19h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="EagleSwanImage.jpg" data-fullsrc="EagleSwanImage.jpg" alt="Eagle and Swan Nebulae" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Eagle and Swan Nebulae</div>
+        <div class="overlay-meta">Nebula · RGB · 1h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="ElephantImage.jpg" data-fullsrc="ElephantImage.jpg" alt="Elephant Trunk Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Elephant Trunk Nebula</div>
+        <div class="overlay-meta">Nebula · Ha/OIII · 9h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="HeartSoulImage.jpg" data-fullsrc="HeartSoulImage.jpg" alt="Heart and Soul Nebulae" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Heart and Soul Nebulae</div>
+        <div class="overlay-meta">Wide-field · Ha/OIII · 21h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="HorseheadImage.jpg" data-fullsrc="HorseheadImage.jpg" alt="Horsehead &amp; Flame" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Horsehead &amp; Flame</div>
+        <div class="overlay-meta">Nebula · LRGB + Ha · 8h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="IrisImage.jpg" data-fullsrc="IrisImage.jpg" alt="Iris Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Iris Nebula</div>
+        <div class="overlay-meta">Nebula · RGB · 25h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="LagoonTrifidImage.jpg" data-fullsrc="LagoonTrifidImage.jpg" alt="Lagoon and Trifid Nebulae" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Lagoon and Trifid Nebulae</div>
+        <div class="overlay-meta">Wide-field · RGB · 2h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="NorthAmericaImage.jpg" data-fullsrc="NorthAmericaImage.jpg" alt="North America Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">North America Nebula</div>
+        <div class="overlay-meta">Wide-field · RGB · 7h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="globular" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="M13Image.jpg" data-fullsrc="M13Image.jpg" alt="Great Hercules Globular Cluster" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Great Hercules Globular Cluster</div>
+        <div class="overlay-meta">Star Cluster · RGB · 3h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="M33Image.jpeg" data-fullsrc="M33Image.jpeg" alt="Triangulum Galaxy" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Triangulum Galaxy</div>
+        <div class="overlay-meta">Galaxy · LRGB + Ha · 27h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="M81IFN_image.jpg" data-fullsrc="M81IFN_image.jpg" alt="Deep view into M81" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;">
+      <div class="overlay">
+        <div class="overlay-title">Deep view into M81</div>
+        <div class="overlay-meta">Galaxy · LRGB + Ha · 82h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="PacmanImage.jpg" data-fullsrc="PacmanImage.jpg" alt="Pacman Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Pacman Nebula</div>
+        <div class="overlay-meta">Nebula · SHO · 18h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="LeoTrioImage.jpg" data-fullsrc="LeoTrioImage.jpg" alt="Leo Triplet" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Leo Triplet</div>
+        <div class="overlay-meta">Galaxy · RGB · 12h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="Melotte15Image.jpg" data-fullsrc="Melotte15Image.jpg" alt="Pillars of Melotte 15" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Pillars of Melotte 15</div>
+        <div class="overlay-meta">Nebula · SHO · 22h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="SadrImage.jpg" data-fullsrc="SadrImage.jpg" alt="Sadr Region" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Sadr Region</div>
+        <div class="overlay-meta">Nebula · Ha/OIII · 14h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="PlieadesImage.jpg" data-fullsrc="PlieadesImage.jpg" alt="Pleiades Reflection Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Pleiades Reflection Nebula</div>
+        <div class="overlay-meta">Nebula · LRGB · 4h integration</div>
+      </div>
+    </div>
+    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+      <img loading="lazy" decoding="async" src="QuestionMarkImage.jpg" data-fullsrc="QuestionMarkImage.jpg" alt="Question Mark Nebula" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="overlay">
+        <div class="overlay-title">Question Mark Nebula</div>
+        <div class="overlay-meta">Nebula · SHO · 6h integration</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-label">About</div>
+  <div class="about-grid">
+    <div class="about-left">
+      <h2 class="about-title">The pursuit<br>of photons</h2>
+      <p class="about-body">
+        I focus on wide-field imaging of nebulae and galaxies — the kind of deep-sky objects that demand patience, dark skies, and precise equipment. Based in the Pacific Northwest, I regularly image from my light polluted front yard, but also have a remotely operated telescope under some of the darkest skies in the country.
+      </p>
+      <p class="about-body">
+        My workflow spans every stage: target planning, polar alignment, calibration frame acquisition, stacking in PixInsight, and final processing. I'm comfortable with both broadband and narrowband (Ha, OIII, SII) imaging, and increasingly interested in the engineering side of the hobby.
+      </p>
+      <p class="about-body">
+        Beyond the camera, I build custom 3D-printed hardware to improve my imaging setup. I care deeply about the quality of my equipment, and strive to optimize every aspect of my workflow.
+      </p>
+      <img src="aboutme.jpg" alt="About me photo" class="about-photo">
+    </div>
+    <div class="about-right">
+      <div class="section-label" style="margin-bottom: 1.5rem;">Primary Kit</div>
+      <div class="gear-list">
+        <div class="gear-item">
+          <div>
+            <div class="gear-name">Askar 103 APO</div>
+            <div class="gear-role">4-inch imaging refractor</div>
+          </div>
+          <div class="gear-tag">Optics</div>
+        </div>
+        <div class="gear-item">
+          <div>
+            <div class="gear-name">ZWO ASI 2600MM Pro</div>
+            <div class="gear-role">Monochrome imaging camera</div>
+          </div>
+          <div class="gear-tag">Camera</div>
+        </div>
+        <div class="gear-item">
+          <div>
+            <div class="gear-name">Sky-Watcher Wave 150i</div>
+            <div class="gear-role">Harmonic drive mount</div>
+          </div>
+          <div class="gear-tag">Mount</div>
+        </div>
+        <div class="gear-item">
+          <div>
+            <div class="gear-name">PixInsight</div>
+            <div class="gear-role">Stacking and processing</div>
+          </div>
+          <div class="gear-tag">Software</div>
+        </div>
+        <div class="gear-item">
+          <div>
+            <div class="gear-name">Custom PETG enclosure</div>
+            <div class="gear-role">3D-printed computer housing</div>
+          </div>
+          <div class="gear-tag">Hardware</div>
+        </div>
+      </div>
+      <div class="about-stats" style="margin-top: 2rem;">
+        <div class="stat-box">
+          <span class="stat-num">1000+</span>
+          <span class="stat-label">Hours integrated</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">2000+</span>
+          <span class="stat-label">Gigabytes of image data</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">60+</span>
+          <span class="stat-label">Objects imaged</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Telescopes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="telescopes">
+  <div class="section-label">Telescopes</div>
+  <h2 class="gallery-title">My rigs<br> </h2>
+  <div class="telescopes-grid">
+    <article class="rig-card">
+      <div class="rig-image" style="background-image: url('Rig1.jpg');"></div>
+      <div class="rig-content">
+        <div class="rig-name">Askar 103 APO</div>
+        <p class="rig-desc">Primary imaging rig with a 700mm focal length and dedicated monochrome camera. Remotely operated, located in central Texas.</p>
+      </div>
+    </article>
+    <article class="rig-card">
+      <div class="rig-image" style="background-image: url('Rig2.jpg');"></div>
+      <div class="rig-content">
+        <div class="rig-name">William Optics Minicat 51</div>
+        <p class="rig-desc">Compact imaging telescope with a 180mm focal length and compact mount for wide-field and travel imaging applications.</p>
+      </div>
+    </article>
+    <article class="rig-card">
+      <div class="rig-image" style="background-image: url('Rig3.jpg');"></div>
+      <div class="rig-content">
+        <div class="rig-name">Celestron EdgeHD 800</div>
+        <p class="rig-desc">My largest telesope. 2000mm focal length and large aperture. My go-to scope for high resolution planetary and galacic imaging.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="process">
+  <div class="section-label">Workflow</div>
+  <h2 class="gallery-title" style="margin-bottom: 3rem;">From photons<br>to pixels</h2>
+  <div class="process-grid">
+    <div class="process-card">
+      <span class="process-num">01</span>
+      <div class="process-title">Target selection</div>
+      <p class="process-desc">Stellarium, SkySafari, and moon phase planning. Object elevation, angular size, and seasonal availability all factor into what goes on the imaging list.</p>
+    </div>
+    <div class="process-card">
+      <span class="process-num">02</span>
+      <div class="process-title">Acquisition</div>
+      <p class="process-desc">Remote sessions from dark sites. N.I.N.A. for sequencing, PHD2 for guiding. Calibration frames — darks, flats, bias — collected for every session.</p>
+    </div>
+    <div class="process-card">
+      <span class="process-num">03</span>
+      <div class="process-title">Integration</div>
+      <p class="process-desc">PixInsight for stacking and calibration. WBPP for preprocessing. Multi-night data integrated across sessions with rejection algorithms tuned per target.</p>
+    </div>
+    <div class="process-card">
+      <span class="process-num">04</span>
+      <div class="process-title">Processing</div>
+      <p class="process-desc">BlurXTerminator, NoiseXTerminator, StarXTerminator. Careful histogram stretching, colour calibration with SPCC, and masked curve adjustments.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-label">Contact</div>
+  <div class="contact-inner">
+    <h2 class="contact-title">Let's work<br>together</h2>
+    <p class="contact-sub">
+      Available for high quality image prints, editorial licensing, and collaborative projects. Also open to roles at the intersection of hardware and optics.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:mccumax@outlook.com" class="contact-link">
+        <div>
+          <div class="contact-link-label">Email</div>
+          mccumax@outlook.com
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="https://github.com/maxmccullagh" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">GitHub</div>
+          github.com/maxmccullagh
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="https://linkedin.com/in/maxmccullagh" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          linkedin.com/in/maxmccullagh
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="https://instagram.com/astr.max" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">Instagram</div>
+          instagram.com/astr.max
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 — Astrophotography by Max McCullagh</span>
+  <span>47.6062° N · 122.3321° W · Seattle, WA</span>
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">Close ×</button>
+  <div class="lightbox-inner">
+    <img id="lightboxImage" src="" alt="" style="width: 100%; max-height: 70vh; object-fit: contain; border-radius: 18px; margin-bottom: 1.5rem; box-shadow: 0 30px 80px rgba(0,0,0,0.45);">
+    <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; margin-bottom: 0.5rem;" id="lightboxTitle"></div>
+    <div id="lightboxCaption" class="lightbox-caption"></div>
+    <div style="color: rgba(122,125,148,0.7); font-size: 11px; letter-spacing: 0.1em;">
+      Want a print of this image? Please reach out to me—I'd love to work with you!
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Canvas Starfield + Nebula Glow ──────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); drawStatic(); });
+
+  // Seeded PRNG for deterministic star positions
+  function mulberry32(a) {
+    return function() {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  const rnd = mulberry32(0xDEADBEEF);
+
+  // Generate stars of different size classes
+  const STAR_COUNT = 420;
+  const stars = Array.from({ length: STAR_COUNT }, () => ({
+    x: rnd(),
+    y: rnd(),
+    r: rnd() < 0.85 ? rnd() * 0.6 + 0.2 : rnd() * 1.2 + 0.8,
+    a: rnd() * 0.5 + 0.3,
+    twinkleSpeed: rnd() * 0.008 + 0.002,
+    twinklePhase: rnd() * Math.PI * 2,
+    color: rnd() < 0.15 ? [163, 184, 232] : rnd() < 0.08 ? [255, 220, 180] : [255, 255, 255]
+  }));
+
+  // Nebula cloud definitions
+  const nebulae = [
+    { x: 0.72, y: 0.28, rx: 0.28, ry: 0.22, color: [80, 120, 200], a: 0.055 },
+    { x: 0.18, y: 0.65, rx: 0.22, ry: 0.18, color: [100, 60, 160], a: 0.045 },
+    { x: 0.85, y: 0.75, rx: 0.18, ry: 0.14, color: [60, 160, 140], a: 0.035 },
+    { x: 0.42, y: 0.15, rx: 0.20, ry: 0.12, color: [120, 80, 180], a: 0.030 },
+    { x: 0.55, y: 0.88, rx: 0.25, ry: 0.14, color: [50, 100, 180], a: 0.025 },
+  ];
+
+  let tick = 0;
+
+  function drawStatic() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw nebula glows
+    nebulae.forEach(n => {
+      const grd = ctx.createRadialGradient(
+        n.x * W, n.y * H, 0,
+        n.x * W, n.y * H, Math.max(n.rx * W, n.ry * H)
+      );
+      const [r, g, b] = n.color;
+      grd.addColorStop(0,   `rgba(${r},${g},${b},${n.a})`);
+      grd.addColorStop(0.4, `rgba(${r},${g},${b},${n.a * 0.5})`);
+      grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+      ctx.save();
+      ctx.scale(1, n.ry / n.rx);
+      ctx.beginPath();
+      ctx.arc(n.x * W, (n.y * H) * (n.rx / n.ry), n.rx * W, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function animate() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // Nebulae (static glow)
+    nebulae.forEach(n => {
+      const grd = ctx.createRadialGradient(
+        n.x * W, n.y * H, 0,
+        n.x * W, n.y * H, Math.max(n.rx * W, n.ry * H)
+      );
+      const [r, g, b] = n.color;
+      grd.addColorStop(0,   `rgba(${r},${g},${b},${n.a})`);
+      grd.addColorStop(0.4, `rgba(${r},${g},${b},${n.a * 0.5})`);
+      grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+      ctx.save();
+      ctx.scale(1, n.ry / n.rx);
+      ctx.beginPath();
+      ctx.arc(n.x * W, (n.y * H) * (n.rx / n.ry), n.rx * W, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Stars with twinkle
+    stars.forEach(s => {
+      const twinkle = Math.sin(tick * s.twinkleSpeed + s.twinklePhase) * 0.25 + 0.75;
+      const alpha = s.a * twinkle;
+      const [r, g, b] = s.color;
+
+      // Glow halo for brighter stars
+      if (s.r > 1) {
+        const halo = ctx.createRadialGradient(
+          s.x * W, s.y * H, 0, s.x * W, s.y * H, s.r * 3.5
+        );
+        halo.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.4})`);
+        halo.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        ctx.beginPath();
+        ctx.arc(s.x * W, s.y * H, s.r * 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = halo;
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+      ctx.fill();
+    });
+
+    tick++;
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+
+// ── Page fade in ────────────────────────────────────────────────────────────
+document.body.style.opacity = '0';
+document.body.style.transition = 'opacity 0.6s ease';
+window.addEventListener('load', () => { document.body.style.opacity = '1'; });
+
+// ── Gallery filter ───────────────────────────────────────────────────────────
+function filterGallery(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.style.display = (cat === 'all' || item.dataset.category === cat) ? '' : 'none';
+  });
+}
+
+// ── Lightbox ─────────────────────────────────────────────────────────────────
+function openLightbox(item) {
+  const title = item.querySelector('.overlay-title')?.textContent || item.querySelector('img')?.alt || '';
+  const caption = item.dataset.caption || item.querySelector('.overlay-meta')?.textContent || '';
+  const image = item.querySelector('img');
+  const lightboxImage = document.getElementById('lightboxImage');
+  if (image && lightboxImage) {
+    lightboxImage.src = image.dataset.fullsrc || image.src;
+    lightboxImage.alt = image.alt || title;
+  }
+  document.getElementById('lightboxTitle').textContent = title;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+
+</body>
+</html>
+
+
