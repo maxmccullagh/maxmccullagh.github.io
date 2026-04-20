@@ -23,10 +23,10 @@
     --sans: 'Outfit', sans-serif;
   }
 
-  html { scroll-behavior: smooth; background: #05070d; }
+  html { scroll-behavior: smooth; }
 
   body {
-    background: transparent;
+    background: var(--bg);
     color: var(--text);
     font-family: var(--sans);
     font-weight: 300;
@@ -213,7 +213,7 @@
   }
 
   /* GALLERY */
-  #gallery { background: rgba(11,14,24,0.82); border-top: 1px solid var(--border); }
+  #gallery { background: var(--bg2); border-top: 1px solid var(--border); }
 
   .gallery-header {
     display: flex;
@@ -473,7 +473,7 @@
     white-space: nowrap;
   }
 
-  #telescopes { background: rgba(11,14,24,0.82); border-top: 1px solid var(--border); }
+  #telescopes { background: var(--bg2); border-top: 1px solid var(--border); }
 
   .telescopes-grid {
     display: grid;
@@ -521,7 +521,7 @@
   }
 
   /* PROCESS */
-  #process { background: rgba(11,14,24,0.82); border-top: 1px solid var(--border); }
+  #process { background: var(--bg2); border-top: 1px solid var(--border); }
 
   .process-grid {
     display: grid;
