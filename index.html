@@ -23,10 +23,10 @@
     --sans: 'Outfit', sans-serif;
   }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; background: #05070d; }
 
   body {
-    background: var(--bg);
+    background: transparent;
     color: var(--text);
     font-family: var(--sans);
     font-weight: 300;
@@ -213,7 +213,7 @@
   }
 
   /* GALLERY */
-  #gallery { background: var(--bg2); border-top: 1px solid var(--border); }
+  #gallery { background: rgba(11,14,24,0.85); border-top: 1px solid var(--border); }
 
   .gallery-header {
     display: flex;
@@ -473,7 +473,7 @@
     white-space: nowrap;
   }
 
-  #telescopes { background: var(--bg2); border-top: 1px solid var(--border); }
+  #telescopes { background: rgba(11,14,24,0.85); border-top: 1px solid var(--border); }
 
   .telescopes-grid {
     display: grid;
@@ -521,7 +521,7 @@
   }
 
   /* PROCESS */
-  #process { background: var(--bg2); border-top: 1px solid var(--border); }
+  #process { background: rgba(11,14,24,0.85); border-top: 1px solid var(--border); }
 
   .process-grid {
     display: grid;
@@ -794,7 +794,7 @@
   </div>
 
   <div class="gallery-grid" id="galleryGrid">
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="CrescentImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="CrescentImage.jpg" alt="Crescent Nebula" decoding="async" loading="lazy">
       <div class="overlay">
@@ -802,7 +802,7 @@
         <div class="overlay-meta">Nebula · Ha/OIII · 19h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="EagleSwanImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="EagleSwanImage.jpg" alt="Eagle and Swan Nebulae" decoding="async" loading="lazy">
       <div class="overlay">
@@ -810,7 +810,7 @@
         <div class="overlay-meta">Nebula · RGB · 1h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="ElephantImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="ElephantImage.jpg" alt="Elephant Trunk Nebula" decoding="async" loading="lazy">
       <div class="overlay">
@@ -818,7 +818,7 @@
         <div class="overlay-meta">Nebula · Ha/OIII · 9h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="widefield">
       <img class="img-thumb" src="HeartSoulImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="HeartSoulImage.jpg" alt="Heart and Soul Nebulae" decoding="async" loading="lazy">
       <div class="overlay">
@@ -826,7 +826,7 @@
         <div class="overlay-meta">Wide-field · Ha/OIII · 21h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="HorseheadImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="HorseheadImage.jpg" alt="Horsehead &amp; Flame" decoding="async" loading="lazy">
       <div class="overlay">
@@ -834,7 +834,7 @@
         <div class="overlay-meta">Nebula · LRGB + Ha · 8h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="IrisImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="IrisImage.jpg" alt="Iris Nebula" decoding="async" loading="lazy">
       <div class="overlay">
@@ -842,7 +842,7 @@
         <div class="overlay-meta">Nebula · RGB · 25h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="widefield">
       <img class="img-thumb" src="LagoonTrifidImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="LagoonTrifidImage.jpg" alt="Lagoon and Trifid Nebulae" decoding="async" loading="lazy">
       <div class="overlay">
@@ -850,7 +850,7 @@
         <div class="overlay-meta">Wide-field · RGB · 2h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="galaxy">
       <img class="img-thumb" src="LeoTrioImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="LeoTrioImage.jpg" alt="Leo Triplet" decoding="async" loading="lazy">
       <div class="overlay">
@@ -858,7 +858,7 @@
         <div class="overlay-meta">Galaxy · RGB · 12h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="globular" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="globular">
       <img class="img-thumb" src="M13Image_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="M13Image.jpg" alt="Great Hercules Globular Cluster" decoding="async" loading="lazy">
       <div class="overlay">
@@ -866,15 +866,15 @@
         <div class="overlay-meta">Star Cluster · RGB · 3h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
-      <img class="img-thumb" src="M33Image_thumb.jpeg" alt="" aria-hidden="true" decoding="async">
+    <div class="gallery-item" data-category="galaxy">
+      <img class="img-thumb" src="M33Image_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="M33Image.jpeg" alt="Triangulum Galaxy" decoding="async" loading="lazy">
       <div class="overlay">
         <div class="overlay-title">Triangulum Galaxy</div>
         <div class="overlay-meta">Galaxy · LRGB + Ha · 27h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="galaxy" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="galaxy">
       <img class="img-thumb" src="M81IFN_image_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="M81IFN_image.jpg" alt="Deep view into M81" decoding="async" loading="lazy">
       <div class="overlay">
@@ -882,7 +882,7 @@
         <div class="overlay-meta">Galaxy · LRGB + Ha · 82h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="PacmanImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="PacmanImage.jpg" alt="Pacman Nebula" decoding="async" loading="lazy">
       <div class="overlay">
@@ -890,7 +890,7 @@
         <div class="overlay-meta">Nebula · SHO · 18h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="widefield" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="widefield">
       <img class="img-thumb" src="NorthAmericaImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="NorthAmericaImage.jpg" alt="North America Nebula" decoding="async" loading="lazy">
       <div class="overlay">
@@ -898,7 +898,7 @@
         <div class="overlay-meta">Wide-field · RGB · 7h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="Melotte15Image_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="Melotte15Image.jpg" alt="Pillars of Melotte 15" decoding="async" loading="lazy">
       <div class="overlay">
@@ -906,7 +906,7 @@
         <div class="overlay-meta">Nebula · SHO · 22h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="SadrImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="SadrImage.jpg" alt="Sadr Region" decoding="async" loading="lazy">
       <div class="overlay">
@@ -914,7 +914,7 @@
         <div class="overlay-meta">Nebula · Ha/OIII · 14h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="PlieadesImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="PlieadesImage.jpg" alt="Pleiades Reflection Nebula" decoding="async" loading="lazy">
       <div class="overlay">
@@ -922,7 +922,7 @@
         <div class="overlay-meta">Nebula · LRGB · 4h integration</div>
       </div>
     </div>
-    <div class="gallery-item" data-category="nebula" onclick="openLightbox(this)">
+    <div class="gallery-item" data-category="nebula">
       <img class="img-thumb" src="QuestionMarkImage_thumb.jpg" alt="" aria-hidden="true" decoding="async">
       <img class="img-full" data-src="QuestionMarkImage.jpg" alt="Question Mark Nebula" decoding="async" loading="lazy">
       <div class="overlay">
@@ -1273,59 +1273,57 @@ function filterGallery(cat, btn) {
 }
 
 // ── Lightbox ─────────────────────────────────────────────────────────────────
-function openLightbox(item) {
-  const title = item.querySelector('.overlay-title')?.textContent || item.querySelector('img')?.alt || '';
-  const caption = item.dataset.caption || item.querySelector('.overlay-meta')?.textContent || '';
-  const image = item.querySelector('img.img-full');
+document.addEventListener('click', function(e) {
+  const item = e.target.closest('.gallery-item');
+  if (!item) return;
+
+  const title   = item.querySelector('.overlay-title')?.textContent || '';
+  const caption = item.querySelector('.overlay-meta')?.textContent  || '';
+  const image   = item.querySelector('img.img-full');
   const lightboxImage = document.getElementById('lightboxImage');
+
   if (image && lightboxImage) {
     lightboxImage.src = image.dataset.src || image.src;
     lightboxImage.alt = image.alt || title;
   }
-  document.getElementById('lightboxTitle').textContent = title;
+  document.getElementById('lightboxTitle').textContent   = title;
   document.getElementById('lightboxCaption').textContent = caption;
   document.getElementById('lightbox').classList.add('open');
-}
+});
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
 }
 
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
 // ── Progressive image loader ──────────────────────────────────────────────────
-(function() {
-  // The thumb img loads immediately (small, same file, browser caches it quickly).
-  // The full-res img has data-src instead of src so it won't load until observed.
-  // When it enters the viewport, we set src=data-src, wait for load, then fade in
-  // and fade out the blurred thumb underneath.
+document.addEventListener('DOMContentLoaded', function () {
+  function revealFull(full) {
+    full.classList.add('loaded');
+    const thumb = full.previousElementSibling;
+    if (thumb && thumb.classList.contains('img-thumb')) thumb.classList.add('hidden');
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const full = entry.target;
-      const src = full.dataset.src;
+      const src  = full.dataset.src;
       if (!src) return;
-
-      full.src = src;
-      full.onload = () => {
-        full.classList.add('loaded');
-        // Fade out the sibling thumb
-        const thumb = full.previousElementSibling;
-        if (thumb && thumb.classList.contains('img-thumb')) {
-          thumb.classList.add('hidden');
-        }
-      };
       observer.unobserve(full);
+      full.src = src;
+      if (full.complete && full.naturalWidth > 0) {
+        revealFull(full);
+      } else {
+        full.onload  = () => revealFull(full);
+        full.onerror = () => revealFull(full);
+      }
     });
-  }, {
-    rootMargin: '200px 0px', // start loading 200px before entering viewport
-    threshold: 0
-  });
+  }, { rootMargin: '300px 0px', threshold: 0 });
 
-  // Observe all full-res images that have data-src
-  document.querySelectorAll('img.img-full[data-src]').forEach(img => {
-    observer.observe(img);
-  });
-})();
+  document.querySelectorAll('img.img-full[data-src]').forEach(img => observer.observe(img));
+});
 
 
 
