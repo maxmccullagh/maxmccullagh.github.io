@@ -1277,26 +1277,18 @@ document.addEventListener('click', function(e) {
   const item = e.target.closest('.gallery-item');
   if (!item) return;
 
-  console.log('Lightbox opening for:', item.querySelector('.overlay-title')?.textContent);
-
   const title   = item.querySelector('.overlay-title')?.textContent || '';
   const caption = item.querySelector('.overlay-meta')?.textContent  || '';
   const image   = item.querySelector('img.img-full');
   const lightboxImage = document.getElementById('lightboxImage');
 
-  console.log('Image element:', image);
-  console.log('Lightbox image element:', lightboxImage);
-  console.log('Image src:', image?.dataset.src || image?.src);
-
   if (image && lightboxImage) {
     lightboxImage.src = image.dataset.src || image.src;
     lightboxImage.alt = image.alt || title;
-    console.log('Set lightbox src to:', lightboxImage.src);
   }
   document.getElementById('lightboxTitle').textContent   = title;
   document.getElementById('lightboxCaption').textContent = caption;
   document.getElementById('lightbox').classList.add('open');
-  console.log('Lightbox class added');
 });
 
 function closeLightbox() {
@@ -1332,5 +1324,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.querySelectorAll('img.img-full[data-src]').forEach(img => observer.observe(img));
 });
+</script>
+</body>
+</html>
 
 
