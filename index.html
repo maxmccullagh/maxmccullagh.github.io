@@ -135,13 +135,36 @@
 
   .light-hover {
     position: relative;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    cursor: default;
   }
+
+  .light-hover::before {
+    content: '';
+    position: absolute;
+    inset: -20px -30px;
+    background: radial-gradient(ellipse at center,
+      rgba(255,240,180,0.25) 0%,
+      rgba(255,200,80,0.12) 35%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(8px);
+  }
+
+  .light-hover:hover::before { opacity: 1; }
 
   .light-hover:hover {
     color: #ffffff;
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 200, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.4);
-    filter: brightness(1.5);
+    filter: brightness(1.4);
+    text-shadow:
+      0 0 4px  rgba(255,255,255,0.9),
+      0 0 16px rgba(255,240,180,0.7),
+      0 0 50px rgba(255,200,80,0.35),
+      0 0 90px rgba(255,160,40,0.15);
   }
 
   .hero-sub {
@@ -343,6 +366,20 @@
 
   .gallery-item:hover .overlay { opacity: 1; }
 
+  .gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 0 0 rgba(163,184,232,0);
+    transition: box-shadow 0.4s ease;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .gallery-item:hover::after {
+    box-shadow: inset 0 0 30px 4px rgba(163,184,232,0.18);
+  }
+
   .overlay-title {
     font-family: var(--serif);
     font-size: 1.3rem;
@@ -477,7 +514,7 @@
 
   .telescopes-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
   }
 
@@ -487,19 +524,58 @@
     border-radius: 20px;
     overflow: hidden;
     transition: transform 0.25s ease, border-color 0.25s ease;
+    position: relative;
   }
 
   .rig-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(163,184,232,0.4);
+    border-color: transparent;
+  }
+
+  /* Animated gradient border via pseudo-element */
+  .rig-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 20px;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      rgba(163,184,232,0) 0%,
+      rgba(163,184,232,0.8) 20%,
+      rgba(110,159,212,1) 40%,
+      rgba(163,184,232,0.8) 60%,
+      rgba(163,184,232,0) 80%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+  }
+
+  .rig-card:hover::before {
+    opacity: 1;
+    animation: rotateBorder 3s linear infinite;
+  }
+
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes rotateBorder {
+    to { --angle: 360deg; }
   }
 
   .rig-image {
+    position: relative;
     width: 100%;
-    height: 260px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #0b0e18;
   }
 
   .rig-content {
@@ -770,7 +846,7 @@
     Chasing<br><em><span class="darkness-hover">darkness</span></em><br>to find <span class="light-hover">light</span>
   </h1>
   <p class="hero-sub">
-    Long-exposure imaging of nebulae and galaxies, capturing photons over time . Every frame is a multi-hour investment in patience.
+    Long-exposure imaging of nebulae and galaxies, capturing photons over time. Every frame is a multi-hour investment in patience.
   </p>
   <a href="#gallery" class="hero-cta">View my work</a>
 
@@ -1070,7 +1146,7 @@
     <div class="process-card">
       <span class="process-num">04</span>
       <div class="process-title">Processing</div>
-      <p class="process-desc">BlurXTerminator, NoiseXTerminator, StarXTerminator. Careful histogram stretching, colour calibration with SPCC, and masked curve adjustments.</p>
+      <p class="process-desc">BlurXTerminator, NoiseXTerminator, StarXTerminator. Careful histogram stretching, color calibration with SPCC, and masked curve adjustments.</p>
     </div>
   </div>
 </section>
@@ -1170,12 +1246,15 @@
 
   // Nebula cloud definitions
   const nebulae = [
-    { x: 0.72, y: 0.28, rx: 0.28, ry: 0.22, color: [80, 120, 200], a: 0.055 },
-    { x: 0.18, y: 0.65, rx: 0.22, ry: 0.18, color: [100, 60, 160], a: 0.045 },
-    { x: 0.85, y: 0.75, rx: 0.18, ry: 0.14, color: [60, 160, 140], a: 0.035 },
-    { x: 0.42, y: 0.15, rx: 0.20, ry: 0.12, color: [120, 80, 180], a: 0.030 },
-    { x: 0.55, y: 0.88, rx: 0.25, ry: 0.14, color: [50, 100, 180], a: 0.025 },
+    { x: 0.72, y: 0.28, rx: 0.28, ry: 0.22, color: [80, 120, 200],  a: 0.055, parallax: 0.12 },
+    { x: 0.18, y: 0.65, rx: 0.22, ry: 0.18, color: [100, 60, 160],  a: 0.045, parallax: 0.07 },
+    { x: 0.85, y: 0.75, rx: 0.18, ry: 0.14, color: [60, 160, 140],  a: 0.035, parallax: 0.18 },
+    { x: 0.42, y: 0.15, rx: 0.20, ry: 0.12, color: [120, 80, 180],  a: 0.030, parallax: 0.05 },
+    { x: 0.55, y: 0.88, rx: 0.25, ry: 0.14, color: [50, 100, 180],  a: 0.025, parallax: 0.14 },
   ];
+
+  let scrollY = 0;
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
 
   let tick = 0;
 
@@ -1185,9 +1264,10 @@
 
     // Draw nebula glows
     nebulae.forEach(n => {
+      const cy = n.y * H - scrollY * n.parallax;
       const grd = ctx.createRadialGradient(
-        n.x * W, n.y * H, 0,
-        n.x * W, n.y * H, Math.max(n.rx * W, n.ry * H)
+        n.x * W, cy, 0,
+        n.x * W, cy, Math.max(n.rx * W, n.ry * H)
       );
       const [r, g, b] = n.color;
       grd.addColorStop(0,   `rgba(${r},${g},${b},${n.a})`);
@@ -1196,22 +1276,27 @@
       ctx.save();
       ctx.scale(1, n.ry / n.rx);
       ctx.beginPath();
-      ctx.arc(n.x * W, (n.y * H) * (n.rx / n.ry), n.rx * W, 0, Math.PI * 2);
+      ctx.arc(n.x * W, cy * (n.rx / n.ry), n.rx * W, 0, Math.PI * 2);
       ctx.fillStyle = grd;
       ctx.fill();
       ctx.restore();
     });
   }
 
+  const shootingStars = [];
+  let lastShootingStarTime = Date.now();
+  let nextShootingStarDelay = 5000;
+
   function animate() {
     const W = canvas.width, H = canvas.height;
     ctx.clearRect(0, 0, W, H);
 
-    // Nebulae (static glow)
+    // Nebulae with parallax
     nebulae.forEach(n => {
+      const cy = n.y * H - scrollY * n.parallax;
       const grd = ctx.createRadialGradient(
-        n.x * W, n.y * H, 0,
-        n.x * W, n.y * H, Math.max(n.rx * W, n.ry * H)
+        n.x * W, cy, 0,
+        n.x * W, cy, Math.max(n.rx * W, n.ry * H)
       );
       const [r, g, b] = n.color;
       grd.addColorStop(0,   `rgba(${r},${g},${b},${n.a})`);
@@ -1220,7 +1305,7 @@
       ctx.save();
       ctx.scale(1, n.ry / n.rx);
       ctx.beginPath();
-      ctx.arc(n.x * W, (n.y * H) * (n.rx / n.ry), n.rx * W, 0, Math.PI * 2);
+      ctx.arc(n.x * W, cy * (n.rx / n.ry), n.rx * W, 0, Math.PI * 2);
       ctx.fillStyle = grd;
       ctx.fill();
       ctx.restore();
@@ -1248,6 +1333,43 @@
       ctx.beginPath();
       ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+      ctx.fill();
+    });
+
+    // ── Shooting stars ────────────────────────────────────────────────────────
+    const now = Date.now();
+    if (now - lastShootingStarTime > nextShootingStarDelay) {
+      lastShootingStarTime = now;
+      nextShootingStarDelay = 25000 + Math.random() * 15000;
+      const fromLeft = Math.random() < 0.5;
+      const sx = fromLeft ? Math.random() * W * 0.5 : Math.random() * W;
+      const sy = fromLeft ? Math.random() * H * 0.3 : Math.random() * H * 0.2;
+      const angle = (25 + Math.random() * 20) * (Math.PI / 180);
+      const speed = W * (0.003 + Math.random() * 0.003);
+      const length = W * (0.08 + Math.random() * 0.1);
+      shootingStars.push({ x: sx, y: sy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, length, life: 1.0, decay: 0.018 + Math.random() * 0.012 });
+    }
+
+    shootingStars.forEach((s, i) => {
+      s.x += s.vx; s.y += s.vy; s.life -= s.decay;
+      if (s.life <= 0) { shootingStars.splice(i, 1); return; }
+      const len = Math.sqrt(s.vx*s.vx + s.vy*s.vy);
+      const tailX = s.x - s.vx * (s.length / len);
+      const tailY = s.y - s.vy * (s.length / len);
+      const grad = ctx.createLinearGradient(tailX, tailY, s.x, s.y);
+      grad.addColorStop(0, `rgba(255,255,255,0)`);
+      grad.addColorStop(0.7, `rgba(200,220,255,${s.life * 0.6})`);
+      grad.addColorStop(1, `rgba(255,255,255,${s.life})`);
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(s.x, s.y);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.life})`;
       ctx.fill();
     });
 
